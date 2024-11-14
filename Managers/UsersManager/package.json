@@ -1,0 +1,16 @@
+{
+  "name": "usersmanager",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@dapr/dapr": "^3.4.1",
+    "express": "^4.21.1"
+  }
+}

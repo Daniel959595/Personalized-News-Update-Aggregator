@@ -1,0 +1,85 @@
+services:
+  rabbitmq:
+    image: "rabbitmq:3-management-alpine"
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - dapr-network
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "check_port_connectivity"]
+      interval: 5s
+      timeout: 30s
+      retries: 5
+
+  users_manager:
+    image: users_manager-image
+    build:
+      context: ./Managers/usersManager
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+    networks:
+      - dapr-network
+    volumes:
+      - ./dapr/components:/dapr/components
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
+  dapr_users_manager:
+    image: "daprio/daprd:latest"
+    command: [
+      "./daprd",
+      "-app-id", "usersManager",
+      "-app-port", "3001",
+      "-dapr-http-port", "3501",
+      "-dapr-grpc-port", "50001",
+      "-components-path", "/dapr/components"
+    ]
+    volumes:
+      - ./dapr/components:/dapr/components
+    depends_on:
+      users_manager:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
+    network_mode: "service:users_manager"
+
+  news_manager:
+    image: news_manager-image
+    build:
+      context: ./Managers/newsManager
+      dockerfile: Dockerfile
+    ports:
+      - "3002:3002"
+    networks:
+      - dapr-network
+    volumes:
+      - ./dapr/components:/dapr/components
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
+  dapr_news_manager:
+    image: "daprio/daprd:latest"
+    command: [
+      "./daprd",
+      "-app-id", "news_manager",
+      "-app-port", "3002",
+      "-dapr-http-port", "3502",
+      "-dapr-grpc-port", "50002",
+      "-components-path", "/dapr/components"
+    ]
+    volumes:
+      - ./dapr/components:/dapr/components
+    depends_on:
+      news_manager:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
+    network_mode: "service:news_manager"
+
+networks:
+  dapr-network:
+    driver: bridge
