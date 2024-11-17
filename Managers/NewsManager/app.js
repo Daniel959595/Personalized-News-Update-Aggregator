@@ -1,28 +1,24 @@
-const { DaprServer } = require("@dapr/dapr");
+const express = require("express");
+const bodyParser = require("body-parser");
 
-const daprHost = process.env.DAPR_HOST || "http://localhost";
-const daprPort = process.env.DAPR_HTTP_PORT || "3502";
-const serverHost = process.env.SERVER_HOST || "127.0.0.1";
-const serverPort = process.env.APP_PORT || 3002;
-const pubSubName = "pubsub";
-const pubSubTopic = "news";
+const newsController = require("./Controllers/newsController.js");
 
-async function main() {
-  const server = new DaprServer({
-    serverHost,
-    serverPort,
-    clientOptions: {
-      daprHost,
-      daprPort,
-    },
-  });
+const app = express();
+app.use(bodyParser.json({ type: "application/*+json" }));
 
-  // Dapr subscription routes orders topic to this route
-  server.pubsub.subscribe(pubSubName, pubSubTopic, (data) =>
-    console.log("Subscriber received: " + JSON.stringify(data))
-  );
+const port = 3002;
 
-  await server.start();
-}
+// app.post("/register-user", (req, res) => {
+//   console.log(req.body.data);
+//   res.sendStatus(200);
+// });
 
-main().catch((e) => console.error(e));
+app.post("/register-user", newsController.triggerNews);
+
+// app.post("/register-user", (req, res) => {
+//   console.log(req.body.data);
+//   newsController.triggerNews(data);
+//   res.sendStatus(200);
+// });
+
+app.listen(port, () => console.log(`consumer app listening on port ${port}`));
