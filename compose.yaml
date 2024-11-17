@@ -12,6 +12,9 @@ services:
       timeout: 30s
       retries: 5
 
+############################################### 
+#               UsersManager
+
   users_manager:
     image: users_manager-image
     build:
@@ -46,6 +49,9 @@ services:
         condition: service_healthy
     network_mode: "service:users_manager"
 
+############################################### 
+#               NewsManager
+
   news_manager:
     image: news_manager-image
     build:
@@ -79,6 +85,44 @@ services:
       rabbitmq:
         condition: service_healthy
     network_mode: "service:news_manager"
+
+############################################### 
+#               NewsApiService
+
+  news_api_accessor:
+    image: news_api_accessor-image
+    build:
+      context: ./Accessors/newsApiAccessor
+      dockerfile: Dockerfile
+    ports:
+      - "3003:3003"
+    networks:
+      - dapr-network
+    volumes:
+      - ./dapr/components:/dapr/components  # Optional ?
+    depends_on:
+      rabbitmq:
+        condition: service_healthy          # Optional ?
+      news_manager:
+        condition: service_started
+
+  dapr_news_api_accessor:
+    image: "daprio/daprd:latest"
+    command: [
+      "./daprd",
+      "-app-id", "news_api_accessor",
+      "-app-port", "3003",
+      "-dapr-http-port", "3503",
+      "-dapr-grpc-port", "50003",
+      "-components-path", "/dapr/components"
+    ]
+    volumes:
+      - ./dapr/components:/dapr/components  # Optional ?
+    depends_on:
+      news_api_accessor:
+        condition: service_started
+    network_mode: "service:news_api_accessor"
+
 
 networks:
   dapr-network:
