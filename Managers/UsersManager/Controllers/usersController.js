@@ -56,9 +56,9 @@ exports.triggerNews = async (req, res) => {
     await client.pubsub.publish(PUBSUB_NAME, PUBSUB_TOPIC, message);
 
     console.log(`Successfully added message to queue!`);
-    res.status(200).send("Successfully Registered user for News Updates");
+    res.status(200).send("Successfully Triggered News");
   } catch (error) {
     console.error("Error publishing request:", error);
-    res.status(500).send("Failed to Register user");
+    res.status(500).send("Failed to Trigger news");
   }
 };

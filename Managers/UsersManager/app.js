@@ -1,14 +1,17 @@
 const express = require("express");
 
-const usersController = require("./Controllers/usersController.js");
+const usersRoutes = require("./routes/usersRoutes.js");
+const connectDB = require("./config/database.js");
+
 const app = express();
 const PORT = 3001;
 
-// app.get("/", (req, res) => {
-//   // res.status(200).send({ massage: "Respnonse from UsersManager!" });
-// });
+app.use(express.json());
 
-app.post("/", usersController.triggerNews);
+// Connect to the database
+connectDB();
+
+app.use("/users", usersRoutes);
 
 app.listen(PORT, () => {
   console.log(`UsersManager running on port ${PORT}`);

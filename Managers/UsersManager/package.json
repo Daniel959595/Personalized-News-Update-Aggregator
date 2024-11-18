@@ -11,6 +11,9 @@
   "license": "ISC",
   "dependencies": {
     "@dapr/dapr": "^3.4.1",
-    "express": "^4.21.1"
+    "bcryptjs": "^2.4.3",
+    "express": "^4.21.1",
+    "mongoose": "^8.8.1",
+    "validator": "^13.12.0"
   }
 }
