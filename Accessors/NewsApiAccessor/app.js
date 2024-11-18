@@ -1,5 +1,4 @@
 const express = require("express");
-const axios = require("axios");
 
 const newsApiController = require("./Controllers/NewaApiController.js");
 const app = express();
@@ -10,5 +9,5 @@ app.use(express.json());
 app.get("/fetch-news", newsApiController.fetchNews);
 
 app.listen(PORT, () => {
-  console.log(`NewsApiController running on port ${PORT}`);
+  console.log(`NewsApiAccessor is running on port ${PORT}`);
 });

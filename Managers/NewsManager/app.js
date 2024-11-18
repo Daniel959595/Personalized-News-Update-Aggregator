@@ -13,7 +13,7 @@ const port = 3002;
 //   res.sendStatus(200);
 // });
 
-app.post("/register-user", newsController.triggerNews);
+app.post("/register-user", newsController.fetchNews);
 
 // app.post("/register-user", (req, res) => {
 //   console.log(req.body.data);

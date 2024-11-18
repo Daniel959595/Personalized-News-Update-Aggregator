@@ -87,7 +87,7 @@ services:
     network_mode: "service:news_manager"
 
 ############################################### 
-#               NewsApiService
+#               NewsApiAccessor
 
   news_api_accessor:
     image: news_api_accessor-image
@@ -122,6 +122,43 @@ services:
       news_api_accessor:
         condition: service_started
     network_mode: "service:news_api_accessor"
+
+############################################### 
+#               MailAccessor
+
+  mail_accessor:
+    image: mail_accessor-image
+    build:
+      context: ./Accessors/MailAccessor
+      dockerfile: Dockerfile
+    ports:
+      - "3004:3004"
+    networks:
+      - dapr-network
+    volumes:
+      - ./dapr/components:/dapr/components  # Optional ?
+    depends_on:
+      rabbitmq:
+        condition: service_healthy          # Optional ?
+      news_manager:
+        condition: service_started
+
+  dapr_mail_accessor:
+    image: "daprio/daprd:latest"
+    command: [
+      "./daprd",
+      "-app-id", "mail_accessor",
+      "-app-port", "3004",
+      "-dapr-http-port", "3504",
+      "-dapr-grpc-port", "50004",
+      "-components-path", "/dapr/components"
+    ]
+    volumes:
+      - ./dapr/components:/dapr/components  # Optional ?
+    depends_on:
+      mail_accessor:
+        condition: service_started
+    network_mode: "service:mail_accessor"
 
 
 networks:

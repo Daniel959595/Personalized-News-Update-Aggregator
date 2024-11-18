@@ -11,8 +11,8 @@ RUN npm install
 # Bundle app source
 COPY . .
 
-# Expose port 3001 for UsersManager
-EXPOSE 3001
+# Expose port 3002 for NewsManager
+EXPOSE 3002
 
 # Start UsersManager
 CMD ["npm", "start"]

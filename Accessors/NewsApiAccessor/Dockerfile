@@ -11,8 +11,8 @@ RUN npm install
 # Bundle app source
 COPY . .
 
-# Expose port 3001 for UsersManager
+# Expose port 3003 for NewsApiAccessor
 EXPOSE 3003
 
-# Start UsersManager
+# Start NewsApiAccessor
 CMD ["npm", "start"]

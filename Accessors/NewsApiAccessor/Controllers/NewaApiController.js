@@ -4,7 +4,7 @@ const API_KEY = "pub_59496e0815c0be93a500d29156774964142d3";
 
 exports.fetchNews = async (req, res) => {
   try {
-    const { category, q } = req.query;
+    const { category, q, emailAddres } = req.query;
 
     if (!category && !q) {
       return res
