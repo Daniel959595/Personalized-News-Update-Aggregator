@@ -2,7 +2,7 @@ require("dotenv").config();
 
 const axios = require("axios");
 const jwt = require("jsonwebtoken");
-// const { promisify } = require("util");
+const { promisify } = require("util");
 
 const signToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -39,19 +39,6 @@ const createSendToken = (user, statusCode, res) => {
     res.status(error.response?.status || 400).send("Failed to create Token");
   }
 };
-// const createSendToken = (user, statusCode, res) => {
-//   // Create jwt token
-
-//   // Remove password from output
-//   user.password = undefined;
-
-//   res.status(statusCode).json({
-//     status: "success",
-//     data: {
-//       user,
-//     },
-//   });
-// };
 
 exports.signup = async (req, res) => {
   try {
@@ -101,5 +88,47 @@ exports.login = async (req, res) => {
   } catch (error) {
     console.error("UsersDBAccessor return with error:", error.response.data);
     res.status(error.response?.status || 400).send(error.response.data);
+  }
+};
+
+exports.protect = async (req, res, next) => {
+  try {
+    // Check if there is a token
+    let token;
+    if (
+      req.headers.authorization &&
+      req.headers.authorization.startsWith("Bearer")
+    ) {
+      token = req.headers.authorization.split(" ")[1];
+    }
+
+    if (!token)
+      return res
+        .status(401)
+        .send("You are not logged in! Please log in to get access");
+
+    // Verification token
+    const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+
+    // console.log(`decoded = ${decoded}`);
+
+    // Check if user still exists
+    const currentUser = await axios.get(
+      `http://localhost:3501/v1.0/invoke/users_db_accessor/method/get-user/${decoded.id}`
+    );
+
+    if (!currentUser)
+      return res
+        .status(401)
+        .send("The user belonging to this token does no longer exist");
+
+    // Check if user changed password after the token was issued
+
+    // Add user to req (for next middleware)
+    req.user = currentUser;
+    next();
+  } catch (error) {
+    console.error("UsersDBAccessor return with error:", error);
+    res.status(400).send(error);
   }
 };

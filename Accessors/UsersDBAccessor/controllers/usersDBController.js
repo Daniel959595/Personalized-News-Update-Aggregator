@@ -69,3 +69,25 @@ exports.login = async (req, res) => {
     res.status(400).send("Login failed!");
   }
 };
+
+exports.getUserById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    console.log(`INgetUserById id: ${id}`);
+
+    const user = await User.findById(id);
+
+    if (!user) return res.status(404).send("User not found");
+
+    res.status(200).json({
+      status: "success",
+      data: {
+        user,
+      },
+    });
+  } catch (error) {
+    console.error("Error retrieving user:", error.message);
+    res.status(500).send("Error retrieving user");
+  }
+};

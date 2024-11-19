@@ -62,3 +62,19 @@ exports.triggerNews = async (req, res) => {
     res.status(500).send("Failed to Trigger news");
   }
 };
+
+exports.setPreference = async (req, res) => {
+  try {
+    const userData = req.user.data.data.user;
+    // console.log(JSON.stringify(userData, null, 2));
+
+    // Update the user data in db through UserDbAccessor
+
+    // Return the updated user
+
+    res.status(200).send("Successfully set preference!");
+  } catch (error) {
+    console.error("Faild to set preference: ", error.message);
+    res.status(error.response?.status || 400).send(error.message);
+  }
+};

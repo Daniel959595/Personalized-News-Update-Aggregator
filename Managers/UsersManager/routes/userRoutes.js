@@ -6,7 +6,11 @@ const userController = require("../controllers/userController");
 router.post("/signup", authController.signup);
 router.post("/login", authController.login);
 
-// router.post("/set-preference", userController.setPreference);
+router.post(
+  "/set-preference",
+  authController.protect,
+  userController.setPreference
+);
 router.post("/trigger-news", userController.triggerNews);
 
 module.exports = router;

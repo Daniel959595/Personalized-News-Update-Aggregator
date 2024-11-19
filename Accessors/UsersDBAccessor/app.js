@@ -14,6 +14,8 @@ connectDB();
 app.post("/signup", usersDBController.signup);
 app.post("/login", usersDBController.login);
 
+app.get("/get-user/:id", usersDBController.getUserById);
+
 app.listen(PORT, () => {
   console.log(`NewsApiAccessor is running on port ${PORT}`);
 });

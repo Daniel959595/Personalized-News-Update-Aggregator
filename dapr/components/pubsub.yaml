@@ -12,3 +12,5 @@ spec:
       value: false
     - name: deleteWhenUnused
       value: true
+    - name: heartbeat
+      value: 30s
