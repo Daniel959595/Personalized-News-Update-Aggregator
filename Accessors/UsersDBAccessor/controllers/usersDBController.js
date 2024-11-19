@@ -1,9 +1,6 @@
 const User = require("../models/userModel.js");
 
 const createSendToken = (user, statusCode, res) => {
-  // Create jwt token
-
-  // Remove password from output
   user.password = undefined;
 
   res.status(statusCode).json({
