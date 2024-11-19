@@ -13,7 +13,7 @@ exports.fetchNews = async (req, res) => {
     }
 
     // Add language option ?
-    let apiUrl = `https://newsdata.io/api/1/news?apikey=${API_KEY}&language=en`;
+    let apiUrl = `https://newsdata.io/api/1/latest?apikey=${API_KEY}&language=en`;
     if (q) {
       apiUrl += `&q="${encodeURIComponent(q)}"`;
     }

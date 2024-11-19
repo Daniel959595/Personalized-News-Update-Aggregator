@@ -46,7 +46,9 @@ services:
     depends_on:
       rabbitmq:
         condition: service_healthy
-      mongodb:
+      # mongodb:
+      #   condition: service_started
+      users_db_accessor:
         condition: service_started
 
   dapr_users_manager:
@@ -64,8 +66,8 @@ services:
     depends_on:
       users_manager:
         condition: service_started
-      rabbitmq:
-        condition: service_healthy
+      # rabbitmq:
+      #   condition: service_healthy
     network_mode: "service:users_manager"
 
 ############################################### 
@@ -178,6 +180,42 @@ services:
       mail_accessor:
         condition: service_started
     network_mode: "service:mail_accessor"
+
+############################################### 
+#               UsersDBAccessor
+  users_db_accessor:
+      image: users_db_accessor-image
+      build:
+        context: ./Accessors/UsersDBAccessor
+        dockerfile: Dockerfile
+      ports:
+        - "3005:3005"
+      networks:
+        - dapr-network
+      volumes:
+        - ./dapr/components:/dapr/components
+      depends_on:
+        rabbitmq:
+          condition: service_healthy          # Optional ?
+        mongodb:
+          condition: service_started
+
+  dapr_users_db_accessor:
+    image: "daprio/daprd:latest"
+    command: [
+      "./daprd",
+      "-app-id", "users_db_accessor",
+      "-app-port", "3005",
+      "-dapr-http-port", "3505",
+      "-dapr-grpc-port", "50005",
+      "-components-path", "/dapr/components"
+    ]
+    volumes:
+      - ./dapr/components:/dapr/components  # Optional ?
+    depends_on:
+      users_db_accessor:
+        condition: service_started
+    network_mode: "service:users_db_accessor"
 
 
 networks:
