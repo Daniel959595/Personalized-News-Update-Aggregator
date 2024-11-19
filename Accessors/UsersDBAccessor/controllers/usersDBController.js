@@ -21,7 +21,7 @@ const handleValidationErrorDB = (err, res) => {
   res.status(400).send(message);
 };
 
-exports.saveUser = async (req, res) => {
+exports.signup = async (req, res) => {
   try {
     console.log("In users db controller1");
 
@@ -52,19 +52,23 @@ exports.saveUser = async (req, res) => {
 
 exports.login = async (req, res) => {
   try {
+    console.log("In users db controller1");
+
     const { email, password } = req.body;
 
     if (!email || !password)
-      res.status(400).send("Please provide email and password!");
+      return res.status(400).send("Please provide email and password!");
 
     const user = await User.findOne({ email }).select("+password");
 
     if (!user || !(await user.correctPassword(password, user.password)))
-      res.status(401).send("Incorrect email or password");
+      return res.status(401).send("Incorrect email or password");
 
-    console.log("User log in successfully");
+    console.log("User logged in successfully");
 
     createSendToken(user, 200, res);
     // Create send token to client
-  } catch (error) {}
+  } catch (error) {
+    res.status(400).send("Login failed!");
+  }
 };

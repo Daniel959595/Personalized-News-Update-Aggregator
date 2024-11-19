@@ -11,7 +11,8 @@ app.use(express.json());
 // Connect to the database
 connectDB();
 
-app.post("/save-user", usersDBController.saveUser);
+app.post("/signup", usersDBController.signup);
+app.post("/login", usersDBController.login);
 
 app.listen(PORT, () => {
   console.log(`NewsApiAccessor is running on port ${PORT}`);
