@@ -1,0 +1,13 @@
+extends base
+
+block content
+  h2 Preferences
+  form(action="/preferences/save" method="post")
+    label(for="category") Select Category
+    select(name="category" required)
+      option(value="news") News
+      option(value="tech") Tech
+    label(for="text") Add Text
+    input(type="text" name="text")
+    button(type="submit") Save Preferences
+  div#feedback.modal.hidden

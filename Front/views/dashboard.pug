@@ -1,0 +1,7 @@
+extends base
+
+block content
+  h2 Dashboard
+  button(onclick="window.location='/preferences/edit'") Set Preferences
+  button(onclick="getUpdates()") Get Updates
+  div#feedback.modal.hidden
