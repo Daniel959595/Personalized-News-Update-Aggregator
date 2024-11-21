@@ -1,31 +1,74 @@
-function showModal(message, isSuccess) {
+const loginForm = document.getElementById("form-login");
+const signupForm = document.getElementById("form-signup");
+
+if (loginForm)
+  loginForm.addEventListener("submit", (e) =>
+    handleFormSubmit(login, loginForm, e)
+  );
+if (signupForm)
+  signupForm.addEventListener("submit", (e) =>
+    handleFormSubmit(signup, signupForm, e)
+  );
+
+const handleFormSubmit = async (handler, form, e) => {
+  e.preventDefault();
+  await handler(form);
+};
+
+const login = async (form) => {
+  try {
+    const email = form.querySelector("#email").value;
+    const password = form.querySelector("#password").value;
+    const res = await axios({
+      method: form.method,
+      url: form.action,
+      data: {
+        email,
+        password,
+      },
+    });
+
+    if (res.data.status === "success") {
+      showAlert("success", "Logged in successfully!");
+      window.setTimeout(() => {
+        location.assign("/");
+      }, 1500);
+    }
+  } catch (err) {
+    showAlert("error", err.response?.data?.message || "An error occurred.");
+  }
+};
+
+const signup = async (form) => {
+  try {
+    const name = form.querySelector("#name").value;
+    const email = form.querySelector("#email").value;
+    const password = form.querySelector("#password").value;
+    const res = await axios({
+      method: form.method,
+      url: form.action,
+      data: {
+        name,
+        email,
+        password,
+      },
+    });
+
+    if (res.data.status === "success") {
+      showAlert("success", "Signed up successfully!");
+      window.setTimeout(() => {
+        location.assign("/");
+      }, 1500);
+    }
+  } catch (err) {
+    showAlert("error", err.response?.data?.message || "An error occurred.");
+  }
+};
+
+const showAlert = (type, message) => {
   const modal = document.getElementById("feedback");
   modal.textContent = message;
-  modal.className = isSuccess ? "modal success" : "modal error";
+  modal.className = `modal ${type === "success" ? "success" : "error"}`;
   modal.classList.remove("hidden");
-  setTimeout(() => modal.classList.add("hidden"), 3000);
-}
-
-async function submitForm(form, event) {
-  event.preventDefault();
-  const formData = new FormData(form);
-  const data = Object.fromEntries(formData.entries());
-
-  try {
-    const response = await fetch(form.action, {
-      method: form.method,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    });
-    const result = await response.json();
-    showModal(result.message, response.ok);
-  } catch (error) {
-    showModal("An error occurred.", false);
-  }
-}
-
-document
-  .querySelectorAll("form")
-  .forEach((form) =>
-    form.addEventListener("submit", (event) => submitForm(form, event))
-  );
+  setTimeout(() => modal.classList.add("hidden"), 4000);
+};

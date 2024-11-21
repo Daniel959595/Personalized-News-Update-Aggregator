@@ -13,23 +13,23 @@ const signToken = (id) => {
 const createSendToken = (user, statusCode, res) => {
   try {
     // Create jwt token
-    const token = signToken(user._id);
-    const cookieOptions = {
-      expires: new Date(
-        // Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
-        Date.now() + 15 * 60 * 1000 // 15 minutes
-      ),
-      httpOnly: true,
-    };
+    // const token = signToken(user._id);
+    // const cookieOptions = {
+    //   expires: new Date(
+    //     // Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+    //     Date.now() + 15 * 60 * 1000 // 15 minutes
+    //   ),
+    //   httpOnly: true,
+    // };
 
-    res.cookie("jwt", token, cookieOptions);
+    // res.cookie("jwt", token, cookieOptions);
 
     // Remove password from output
     user.password = undefined;
 
     res.status(statusCode).json({
       status: "success",
-      token,
+      // token,
       data: {
         user,
       },
@@ -67,7 +67,11 @@ exports.signup = async (req, res) => {
 
 exports.login = async (req, res) => {
   try {
+    console.log(`in usersManagers!`);
+
     const { email, password } = req.body;
+
+    console.log(`${email} - ${password}`);
 
     if (!email || !password)
       return res.status(400).send("Please provide email and password!");
@@ -81,8 +85,6 @@ exports.login = async (req, res) => {
     );
 
     const user = response.data.data.user;
-
-    console.log("User logged in successfully");
 
     createSendToken(user, 200, res);
   } catch (error) {

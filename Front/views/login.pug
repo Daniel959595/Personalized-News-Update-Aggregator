@@ -2,11 +2,11 @@ extends base
 
 block content
   h2 Login
-  form(action="/auth/login" method="post")
+  form(action="/auth/login" method="post" id="form-login")
     label(for="email") Email
-    input(type="email" name="email" required)
+    input(type="email" name="email" id="email" required)
     label(for="password") Password
-    input(type="password" name="password" required)
+    input(type="password" name="password" id="password" required)
     button(type="submit") Login
   p Don't have an account? 
     a(href="/auth/signup") Sign up

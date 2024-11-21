@@ -15,6 +15,9 @@ app.post("/signup", usersDBController.signup);
 app.post("/login", usersDBController.login);
 
 app.get("/get-user/:id", usersDBController.getUserById);
+app.get("/get-all-users", usersDBController.getAllUsers);
+
+app.patch("/users/:id/preferences", usersDBController.setUserPreference);
 
 app.listen(PORT, () => {
   console.log(`NewsApiAccessor is running on port ${PORT}`);

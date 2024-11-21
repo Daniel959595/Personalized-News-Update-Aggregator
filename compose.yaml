@@ -31,6 +31,56 @@ services:
     networks:
       - dapr-network
 
+  mongo-express:
+    image: mongo-express
+    container_name: mongo-express
+    ports:
+      - "8081:8081"
+    environment:
+      - ME_CONFIG_MONGODB_URL=mongodb://mongodb:27017
+    depends_on:
+      - mongodb
+    networks:
+      - dapr-network
+
+
+############################################### 
+#                  Front
+
+  front:
+    image: front-image
+    build:
+      context: ./Front
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    networks:
+      - dapr-network
+    volumes:
+      - ./dapr/components:/dapr/components
+    depends_on:
+      rabbitmq:                        # needed ?
+        condition: service_healthy  
+      users_manager:
+        condition: service_started
+
+  dapr_front:
+    image: "daprio/daprd:latest"
+    command: [
+      "./daprd",
+      "-app-id", "front",
+      "-app-port", "3000",
+      "-dapr-http-port", "3500",
+      "-dapr-grpc-port", "50000",
+      "-components-path", "/dapr/components"
+    ]
+    volumes:
+      - ./dapr/components:/dapr/components
+    depends_on:
+      front:
+        condition: service_started
+    network_mode: "service:front"
+
 ############################################### 
 #               UsersManager
 
@@ -57,7 +107,7 @@ services:
     image: "daprio/daprd:latest"
     command: [
       "./daprd",
-      "-app-id", "usersManager",
+      "-app-id", "users_manager",
       "-app-port", "3001",
       "-dapr-http-port", "3501",
       "-dapr-grpc-port", "50001",

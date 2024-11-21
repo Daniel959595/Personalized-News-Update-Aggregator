@@ -2,13 +2,13 @@ extends base
 
 block content
   h2 Sign Up
-  form(action="/auth/signup" method="post")
+  form(action="/auth/signup" method="post" id="form-signup")
     label(for="name") Name
-    input(type="text" name="name" required)
+    input(type="text" name="name" id="name" required)
     label(for="email") Email
-    input(type="email" name="email" required)
+    input(type="email" name="email" id="email" required)
     label(for="password") Password
-    input(type="password" name="password" required)
+    input(type="password" name="password" id="password" required)
     button(type="submit") Sign Up
   p Already have an account? 
     a(href="/auth/login") Log in

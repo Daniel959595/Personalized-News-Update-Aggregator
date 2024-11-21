@@ -53,6 +53,8 @@ exports.login = async (req, res) => {
 
     const { email, password } = req.body;
 
+    console.log(`${email} - ${password}`);
+
     if (!email || !password)
       return res.status(400).send("Please provide email and password!");
 
@@ -89,5 +91,53 @@ exports.getUserById = async (req, res) => {
   } catch (error) {
     console.error("Error retrieving user:", error.message);
     res.status(500).send("Error retrieving user");
+  }
+};
+
+exports.getAllUsers = async (req, res) => {
+  try {
+    console.log("In getAllUsers");
+
+    const users = await User.find();
+
+    res.status(200).json({
+      status: "success",
+      data: {
+        users,
+      },
+    });
+  } catch (error) {
+    console.error("Error retrieving users:", error.message);
+    res.status(500).send("Error retrieving users");
+  }
+};
+
+exports.setUserPreference = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { category, q } = req.body;
+
+    console.log(`In setUserPreference for user id: ${id}`);
+
+    const user = await User.findById(id);
+
+    if (!user) return res.status(404).send("User not found");
+
+    // Update preferences
+    user.category = category;
+    user.q = q;
+    await user.save();
+
+    console.log("User preference updated successfully");
+
+    res.status(200).json({
+      status: "success",
+      data: {
+        user,
+      },
+    });
+  } catch (error) {
+    console.error("Error setting user preference:", error.message);
+    res.status(500).send("Error setting user preference");
   }
 };

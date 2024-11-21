@@ -8,7 +8,7 @@ router.post("/login", authController.login);
 
 router.post(
   "/set-preference",
-  authController.protect,
+  // authController.protect,
   userController.setPreference
 );
 router.post("/trigger-news", userController.triggerNews);
