@@ -197,6 +197,69 @@ main {
   display: none;
 }
 
+/* Dashboard Section */
+.dashboard {
+  padding: 20px;
+  max-width: 600px;
+  margin: 20px auto;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Form Group Spacing */
+.form-group {
+  margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  margin-bottom: 5px;
+  font-weight: bold;
+  font-size: 1rem;
+  color: #333;
+}
+
+/* Button Group */
+.button-group {
+  display: flex;
+  justify-content: space-between; /* Ensure buttons are next to each other */
+  gap: 10px;
+}
+
+.button-group button {
+  flex: 1; /* Equal width for buttons */
+}
+
+/* Button Styles */
+button.btn {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+}
+
+button.btn-primary {
+  background-color: #4CAF50;
+  color: white;
+}
+
+button.btn-primary:hover {
+  background-color: #45a049;
+}
+
+button.btn-secondary {
+  background-color: #ccc;
+  color: #333;
+}
+
+button.btn-secondary:hover {
+  background-color: #bbb;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   header {

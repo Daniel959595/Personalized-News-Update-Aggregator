@@ -1,3 +1,5 @@
+const axios = require("axios");
+
 const { DaprClient } = require("@dapr/dapr");
 
 const DAPR_HOST = process.env.DAPR_HOST || "http://localhost";
@@ -65,16 +67,57 @@ exports.triggerNews = async (req, res) => {
 
 exports.setPreference = async (req, res) => {
   try {
-    const userData = req.user.data.data.user;
-    // console.log(JSON.stringify(userData, null, 2));
+    const { id } = req.params;
+    const { category, text } = req.body;
+    console.log(`${id} -${category}, ${text}`);
 
     // Update the user data in db through UserDbAccessor
-
+    const response = await axios.patch(
+      `http://localhost:3501/v1.0/invoke/users_db_accessor/method/users/${id}/set-preference`,
+      {
+        category,
+        text,
+      }
+    );
     // Return the updated user
+    const user = response.data.data.user;
+    res.status(201).json({
+      status: "success",
+      // token,
+      data: {
+        user,
+      },
+    });
 
-    res.status(200).send("Successfully set preference!");
+    // res.status(200).send("Successfully set preference!");
   } catch (error) {
-    console.error("Faild to set preference: ", error.message);
-    res.status(error.response?.status || 400).send(error.message);
+    console.log(error);
+    console.error("Faild to set preference: ", error.response.data);
+    res.status(error.response?.status || 400).send(error.response.data);
+  }
+};
+
+exports.getUser = async (req, res) => {
+  try {
+    // Update the user data in db through UserDbAccessor
+    const userId = req.params.id;
+    console.log(userId);
+    const response = await axios.get(
+      `http://localhost:3501/v1.0/invoke/users_db_accessor/method/get-user/${userId}`
+    );
+
+    const user = response.data.data.user;
+    res.status(200).json({
+      status: "success",
+      // token,
+      data: {
+        user,
+      },
+    });
+
+    // res.status(200).send("Successfully Got user!");
+  } catch (error) {
+    console.error("Faild to get user: ", error);
+    res.status(error.response?.status || 400).send(error);
   }
 };

@@ -1,7 +1,24 @@
 extends base
 
 block content
-  h2 Dashboard
-  button(onclick="window.location='/preferences/edit'") Set Preferences
-  button(onclick="getUpdates()") Get Updates
-  div#feedback.modal.hidden
+  section.dashboard
+    h1 Welcome to Your Dashboard!
+
+    form#preferenceForm(action="/preference/save" method="post")
+      div.form-group
+        label(for="category") Select a Category:
+        select#category(name="category" required)
+          option(value="news") News
+          option(value="technology") Technology
+          option(value="sports") Sports
+          option(value="entertainment") Entertainment
+
+      div.form-group
+        label(for="customInput") Enter Additional Preferences:
+        input#customInput(type="text" name="customInput" placeholder="Enter text..." required)
+
+      div.button-group
+        button(type="submit" class="btn btn-primary") Save Preferences
+        button(type="button" class="btn btn-secondary" onclick="window.location.href='/preferences'") Set Preferences
+    div#feedback.modal.hidden
+

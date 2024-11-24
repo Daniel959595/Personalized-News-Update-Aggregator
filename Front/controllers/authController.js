@@ -86,28 +86,44 @@ exports.signup = async (req, res) => {
   }
 };
 
-exports.checkAuth = (req, res, next) => {
+exports.checkAuth = async (req, res, next) => {
   //   const token = req.cookies.token;
   // Check if there is a token
-  console.log("Checking for token!");
+  try {
+    console.log("Checking for token!");
 
-  let token;
-  if (
-    req.headers.authorization &&
-    req.headers.authorization.startsWith("Bearer")
-  ) {
-    token = req.headers.authorization.split(" ")[1];
-  } else if (req.cookies && req.cookies.jwt) {
-    token = req.cookies.jwt;
+    let token;
+    if (
+      req.headers.authorization &&
+      req.headers.authorization.startsWith("Bearer")
+    ) {
+      token = req.headers.authorization.split(" ")[1];
+    } else if (req.cookies && req.cookies.jwt) {
+      token = req.cookies.jwt;
+    }
+
+    if (!token) {
+      return res.redirect("/auth/login");
+    }
+    console.log("Token found!");
+
+    const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+    console.log(decoded.id);
+
+    const response = await axios.get(
+      `http://localhost:3500/v1.0/invoke/users_manager/method/users/get-user/${decoded.id}`
+    );
+
+    // Add user to req (for next middleware)
+    req.user = response.data.data.user;
+    // console.log(req.user);
+
+    // Send token to usersManager for verification
+    next();
+  } catch (error) {
+    console.log(error);
+    //
   }
-
-  if (!token) {
-    return res.redirect("/auth/login");
-  }
-  console.log("Token found!");
-
-  // Send token to usersManager for verification
-  next();
 };
 
 exports.protect = async (req, res, next) => {

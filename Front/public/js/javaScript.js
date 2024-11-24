@@ -1,5 +1,8 @@
+// const { setPreference } = require("../../../Managers/UsersManager/controllers/userController");
+
 const loginForm = document.getElementById("form-login");
 const signupForm = document.getElementById("form-signup");
+const preferenceForm = document.getElementById("preferenceForm");
 
 if (loginForm)
   loginForm.addEventListener("submit", (e) =>
@@ -8,6 +11,11 @@ if (loginForm)
 if (signupForm)
   signupForm.addEventListener("submit", (e) =>
     handleFormSubmit(signup, signupForm, e)
+  );
+
+if (preferenceForm)
+  preferenceForm.addEventListener("submit", (e) =>
+    handleFormSubmit(setPreference, preferenceForm, e)
   );
 
 const handleFormSubmit = async (handler, form, e) => {
@@ -56,6 +64,30 @@ const signup = async (form) => {
 
     if (res.data.status === "success") {
       showAlert("success", "Signed up successfully!");
+      window.setTimeout(() => {
+        location.assign("/");
+      }, 1500);
+    }
+  } catch (err) {
+    showAlert("error", err.response?.data?.message || "An error occurred.");
+  }
+};
+
+const setPreference = async (form) => {
+  try {
+    const category = form.querySelector("#category").value;
+    const text = form.querySelector("#customInput").value;
+    const res = await axios({
+      method: form.method,
+      url: form.action,
+      data: {
+        category,
+        text,
+      },
+    });
+
+    if (res.data.status === "success") {
+      showAlert("success", "Preference updated successfully!");
       window.setTimeout(() => {
         location.assign("/");
       }, 1500);

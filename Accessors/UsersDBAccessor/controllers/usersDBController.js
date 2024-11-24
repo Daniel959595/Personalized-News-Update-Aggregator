@@ -115,7 +115,7 @@ exports.getAllUsers = async (req, res) => {
 exports.setUserPreference = async (req, res) => {
   try {
     const { id } = req.params;
-    const { category, q } = req.body;
+    const { category, text } = req.body;
 
     console.log(`In setUserPreference for user id: ${id}`);
 
@@ -125,7 +125,7 @@ exports.setUserPreference = async (req, res) => {
 
     // Update preferences
     user.category = category;
-    user.q = q;
+    user.q = text;
     await user.save();
 
     console.log("User preference updated successfully");
