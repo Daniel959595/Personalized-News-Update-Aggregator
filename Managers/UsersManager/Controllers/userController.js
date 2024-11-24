@@ -117,7 +117,11 @@ exports.getUser = async (req, res) => {
 
     // res.status(200).send("Successfully Got user!");
   } catch (error) {
-    console.error("Faild to get user: ", error);
-    res.status(error.response?.status || 400).send(error);
+    if (error.response && error.response.status === 404)
+      console.error("Error:", error.response.data);
+    // console.error("Faild to get user: ", error);
+    res
+      .status(error.response?.status || 400)
+      .send(error.response?.data || "Failed to get user");
   }
 };

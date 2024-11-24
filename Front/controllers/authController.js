@@ -56,7 +56,7 @@ exports.login = async (req, res) => {
 
     console.log("User logged in successfully");
   } catch (error) {
-    const errorMessage = error.response.data || "An error occurred.";
+    const errorMessage = error.response?.data || "An error occurred.";
     res.status(400).json({ success: false, message: errorMessage });
   }
 };
@@ -81,7 +81,7 @@ exports.signup = async (req, res) => {
     // });
     createSendToken(user, 201, res);
   } catch (error) {
-    const errorMessage = error.response.data || "An error occurred.";
+    const errorMessage = error.response?.data || "An error occurred.";
     res.status(400).json({ success: false, message: errorMessage });
   }
 };
@@ -121,8 +121,11 @@ exports.checkAuth = async (req, res, next) => {
     // Send token to usersManager for verification
     next();
   } catch (error) {
-    console.log(error);
-    //
+    if (error.response && error.response.status === 404)
+      console.error("Error:", error.response.data);
+    else console.log("Error !", error.response?.data || "an error occurred!");
+
+    return res.redirect("/auth/login");
   }
 };
 
@@ -163,7 +166,9 @@ exports.protect = async (req, res, next) => {
     req.user = currentUser;
     next();
   } catch (error) {
-    console.error("UsersManagers return with error:", error);
+    if (error.response && error.response.status === 404)
+      console.error("Error:", error.response.data);
+    // console.error("UsersManagers return with error:", error);
     res.status(400).send(error);
   }
 };
