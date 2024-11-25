@@ -1,5 +1,3 @@
-// const { setPreference } = require("../../../Managers/UsersManager/controllers/userController");
-
 const loginForm = document.getElementById("form-login");
 const signupForm = document.getElementById("form-signup");
 const preferenceForm = document.getElementById("preferenceForm");
@@ -94,6 +92,26 @@ const setPreference = async (form) => {
     }
   } catch (err) {
     showAlert("error", err.response?.data?.message || "An error occurred.");
+  }
+};
+
+const triggerUpdates = async () => {
+  try {
+    const response = await axios.post("/updates/get-updates");
+
+    if (response.status === 200) {
+      console.log("Updates triggered successfully:", response.data);
+      showAlert("success", "News Updates are on the way!");
+    } else {
+      console.error("Unexpected response:", response);
+    }
+  } catch (error) {
+    // Handle errors
+    console.error(
+      "Error triggering updates:",
+      error.response?.data || error.message
+    );
+    showAlert("error", error.response?.data?.message || "An error occurred.");
   }
 };
 

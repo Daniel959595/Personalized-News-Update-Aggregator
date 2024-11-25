@@ -41,18 +41,29 @@ exports.triggerNews = async (req, res) => {
     //   return res.status(500).send("Sorry, Please try again later");
     // }
 
-    const { category, q, emailAddress } = req.query;
-    console.log(`${category} - ${q} ${emailAddress}`);
+    const { id } = req.params;
 
-    if ((!category && !q) || !emailAddress) {
+    console.log(`trigger news - ${id}`);
+
+    // Get user preferences from the DB Accessor
+    // const response = await axios.get(
+    //   `http://localhost:3501/v1.0/invoke/users_db_accessor/method/get-user/${id}`
+    // );
+
+    const response = await axios.get(
+      `http://localhost:3501/v1.0/invoke/users_db_accessor/method/get-user/${id}`
+    );
+
+    const user = response.data.data.user;
+    const { category, q, email } = user;
+
+    if ((!category && !q) || !email) {
       return res.status(400).send({
-        error: !emailAddress
-          ? "Email Address is required!"
-          : "Either category or q is required",
+        error: "Failed to Trigger news",
       });
     }
 
-    const message = { category: category, q: q, emailAddress: emailAddress };
+    const message = { category: category, q: q, emailAddress: email };
 
     // Publish message using the Dapr client
     await client.pubsub.publish(PUBSUB_NAME, PUBSUB_TOPIC, message);
@@ -60,7 +71,7 @@ exports.triggerNews = async (req, res) => {
     console.log(`Successfully added message to queue!`);
     res.status(200).send("Successfully Triggered News");
   } catch (error) {
-    console.error("Error publishing request:", error);
+    console.error("Error:", error.response?.statusText || "Failed");
     res.status(500).send("Failed to Trigger news");
   }
 };
@@ -83,13 +94,10 @@ exports.setPreference = async (req, res) => {
     const user = response.data.data.user;
     res.status(201).json({
       status: "success",
-      // token,
       data: {
         user,
       },
     });
-
-    // res.status(200).send("Successfully set preference!");
   } catch (error) {
     console.log(error);
     console.error("Faild to set preference: ", error.response.data);
@@ -109,17 +117,13 @@ exports.getUser = async (req, res) => {
     const user = response.data.data.user;
     res.status(200).json({
       status: "success",
-      // token,
       data: {
         user,
       },
     });
-
-    // res.status(200).send("Successfully Got user!");
   } catch (error) {
     if (error.response && error.response.status === 404)
       console.error("Error:", error.response.data);
-    // console.error("Faild to get user: ", error);
     res
       .status(error.response?.status || 400)
       .send(error.response?.data || "Failed to get user");

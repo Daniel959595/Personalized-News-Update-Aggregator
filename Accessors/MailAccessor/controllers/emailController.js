@@ -23,17 +23,37 @@ exports.sendNewsEmail = async (req, res) => {
       },
     });
 
-    // Prepare email content
+    const headerImageUrl =
+      "https://static.vecteezy.com/ti/vetor-gratis/p1/29920188-o-que-e-novo-megafone-para-promocao-projeto-discurso-bolha-icone-simbolo-ilustracao-vetor.jpg";
+
     const newsItems = articles
-      //   .map((item) => `<h3>${item.title}</h3><p>${item.description}</p>`)
-      .map((item) => `<h3>${item.title}</h3>`)
+      .map(
+        (item) => `
+      <div style="border-bottom: 1px solid #ddd; padding: 20px; margin-bottom: 20px;">
+        <h3 style="font-family: Arial, sans-serif; color: #333;">${
+          item.title
+        }</h3>
+        <p style="font-family: Arial, sans-serif; color: #666; margin: 10px 0;">${
+          item.description || "No description available."
+        }</p>
+        <a href="${
+          item.link
+        }" style="font-family: Arial, sans-serif; color: #1a73e8; text-decoration: none;">Read more</a>
+      </div>
+    `
+      )
       .join("");
 
+    const emailContent = `<div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+      <div style="text-align: center; margin-bottom: 20px;">
+        <img src="${headerImageUrl}" alt="News Header" style="width: 100%; max-width: 800px; height: auto;" />
+      </div>${newsItems}</div>`;
+
     const mailOptions = {
-      from: "your_email@example.com",
+      from: "news_updates@example.com",
       to: emailAddress,
       subject: "Your News Updates",
-      html: `<h2>Here are your latest news updates:</h2>${newsItems}`,
+      html: `${emailContent}`,
     };
 
     await transporter.sendMail(mailOptions);

@@ -3,7 +3,7 @@ const axios = require("axios");
 exports.fetchNews = async (req, res) => {
   try {
     console.log("Got massage from the queue!");
-    console.log(req.body.data);
+    // console.log(req.body.data);
 
     const { category, q, emailAddress } = req.body.data;
 

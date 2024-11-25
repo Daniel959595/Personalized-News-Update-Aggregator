@@ -22,7 +22,9 @@ app.set("view engine", "pug");
 
 app.use("/auth", authRoutes);
 
+// Authentication middleware, adds user's data to req.
 app.use(authController.checkAuth);
+
 app.use("/", indexRoutes);
 app.use("/preference", preferenceRoutes);
 app.use("/updates", updateRoutes);
