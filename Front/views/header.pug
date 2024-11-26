@@ -1,4 +1,11 @@
+//- header
+//-   h1 Personalized News Updates
+//-   if loggedIn
+//-     button(onclick="logout()") Log out
+
 header
   h1 Personalized News Updates
-  if loggedIn
-    button(onclick="logout()") Log out
+  if user
+    div.user-info
+      span Hello, #{user.name}!
+      button.logout-btn(onclick="logout()") Log out

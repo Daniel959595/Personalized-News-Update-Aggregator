@@ -260,6 +260,33 @@ button.btn-secondary:hover {
   background-color: #bbb;
 }
 
+/* Style for the user info container */
+header .user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px; 
+}
+
+header .user-info span {
+  font-size: 1rem;
+  color: white; 
+}
+
+button.logout-btn {
+  background-color: #f44336; /* Bright red for contrast */
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button.logout-btn:hover {
+  background-color: #d32f2f; /* Slightly darker red for hover effect */
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   header {

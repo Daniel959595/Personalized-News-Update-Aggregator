@@ -100,15 +100,32 @@ const triggerUpdates = async () => {
     const response = await axios.post("/updates/get-updates");
 
     if (response.status === 200) {
-      console.log("Updates triggered successfully:", response.data);
+      console.log("Updates triggered successfully: ", response.data);
       showAlert("success", "News Updates are on the way!");
     } else {
-      console.error("Unexpected response:", response);
+      console.error("Unexpected response: ", response);
     }
   } catch (error) {
-    // Handle errors
     console.error(
-      "Error triggering updates:",
+      "Error - triggering failed:",
+      error.response?.data || error.message
+    );
+    showAlert("error", error.response?.data?.message || "An error occurred.");
+  }
+};
+
+const logout = async () => {
+  try {
+    const response = await axios.post("/logout");
+
+    if (response.status === 200) {
+      console.log("logout successfully!");
+      showAlert("success", "Logged out successfully!");
+      window.location.href = response.data.redirectUrl;
+    }
+  } catch (error) {
+    console.error(
+      "Error - log out failed: ",
       error.response?.data || error.message
     );
     showAlert("error", error.response?.data?.message || "An error occurred.");

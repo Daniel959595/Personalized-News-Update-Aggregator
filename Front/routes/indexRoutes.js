@@ -1,12 +1,9 @@
 const express = require("express");
 const router = express.Router();
-// const authController = require("../controllers/authController.js");
 const viewsController = require("../controllers/viewsController.js");
-
-// router.get("/", (req, res) => {
-//   res.redirect("/preference/dashboard");
-// });
+const authController = require("../controllers/authController.js");
 
 router.get("/", viewsController.homePage);
+router.post("/logout", authController.logout);
 
 module.exports = router;

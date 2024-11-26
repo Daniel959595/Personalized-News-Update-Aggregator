@@ -5,16 +5,20 @@ exports.preferencePage = (req, res) => {
 };
 
 exports.homePage = (req, res) => {
-  const userName = req.user?.name || "Friend";
+  const user = req.user;
+  const userName = user?.name || "Friend";
   res.status(200).render("home", {
     userName,
     title: "Home",
+    user: user,
   });
 };
 
 exports.dashboardPage = (req, res) => {
+  const user = req.user;
   res.status(200).render("dashboard", {
     title: "Dashboard",
+    user: user,
   });
 };
 
