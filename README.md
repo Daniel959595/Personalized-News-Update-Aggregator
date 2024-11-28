@@ -152,8 +152,8 @@ delivering them via email. Future improvements and optimizations will make the s
 
 ## Images
 
-<img src="images/Login Page.png" alt="login-page-image">
-<img src="images/Signup Page.png" alt="signup-page-image">
-<img src="images/Dashboard Page.png" alt="dashboard-page-image">
-<img src="images/Preference Page.png" alt="preference-page-image">
-<img src="images/Mail Example.png" alt="mail-page-image">
+<img src="Images/Login Page.png" alt="login-page-image">
+<img src="Images/Signup Page.png" alt="signup-page-image">
+<img src="Images/Dashboard Page.png" alt="dashboard-page-image">
+<img src="Images/Preference Page.png" alt="preference-page-image">
+<img src="Images/Mail Example.png" alt="mail-page-image">
