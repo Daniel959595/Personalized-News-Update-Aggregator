@@ -12,24 +12,11 @@ const signToken = (id) => {
 
 const createSendToken = (user, statusCode, res) => {
   try {
-    // Create jwt token
-    // const token = signToken(user._id);
-    // const cookieOptions = {
-    //   expires: new Date(
-    //     // Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
-    //     Date.now() + 15 * 60 * 1000 // 15 minutes
-    //   ),
-    //   httpOnly: true,
-    // };
-
-    // res.cookie("jwt", token, cookieOptions);
-
     // Remove password from output
     user.password = undefined;
 
     res.status(statusCode).json({
       status: "success",
-      // token,
       data: {
         user,
       },
@@ -109,10 +96,8 @@ exports.protect = async (req, res, next) => {
         .status(401)
         .send("You are not logged in! Please log in to get access");
 
-    // Verification token
+    // Verify token
     const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
-
-    // console.log(`decoded = ${decoded}`);
 
     // Check if user still exists
     const currentUser = await axios.get(

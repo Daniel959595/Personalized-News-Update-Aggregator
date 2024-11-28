@@ -46,10 +46,6 @@ exports.triggerNews = async (req, res) => {
     console.log(`trigger news - ${id}`);
 
     // Get user preferences from the DB Accessor
-    // const response = await axios.get(
-    //   `http://localhost:3501/v1.0/invoke/users_db_accessor/method/get-user/${id}`
-    // );
-
     const response = await axios.get(
       `http://localhost:3501/v1.0/invoke/users_db_accessor/method/get-user/${id}`
     );

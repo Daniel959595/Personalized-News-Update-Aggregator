@@ -1,17 +1,18 @@
 # Personalised News Update Aggregator
 
-The **Personalised News Update Aggregator** is a microservices-based system that delivers personalized news updates to users. 
+The **Personalised News Update Aggregator** is a microservices-based system that delivers personalized news updates to users.
 The system allows users to receive updates on various topics through email. The system is built using the **iDesign** methodology by Juval Löwy and follows a microservices architecture.
 
 ## Project Purpose
 
-The purpose of the system is to provide users with personalized news updates based on their interests. 
-Users can register, log in, and request to receive news updates. The system aggregates news from multiple sources, processes it, 
+The purpose of the system is to provide users with personalized news updates based on their interests.
+Users can register, log in, and request to receive news updates. The system aggregates news from multiple sources, processes it,
 sends updates to users via emails, and provides services for managing user data.
 
 ## Architecture
 
 The system follows the **iDesign** methodology by Juval Löwy and includes the following components:
+
 - **Microservices**: Each service is responsible for a specific business domain.
 - **Dapr**: Each microservice runs with a **Dapr sidecar** providing communication between services and connecting to RabbitMQ.
 - **RabbitMQ**: Used for communication between two services - the **Users Manager** and **News Manager** via a **Declarative Subscription**.
@@ -19,13 +20,14 @@ The system follows the **iDesign** methodology by Juval Löwy and includes the f
 - **Mailtrap**: Used for sending emails to users (NodeMailer).
 
 The architecture includes the following services:
+
 1. **Users Manager**: Manages user registration, login, and preferences.
 2. **News Manager**: Aggregates news from external API and sends it to users via email.
 3. **News API Accessor**: Fetches news from the external NewsData.io API.
 4. **Mail Accessor**: Sends news updates to users via Mailtrap (NodeMailer).
 5. **Users DB Accessor**: Manages access to the MongoDB database for storing user information.
 6. **MongoDB**: Stores the users data.
-7. **MongoExpress**: Provides interface to access MongoDB through "localhost:8081", (user: "admin", pass: "pass").  
+7. **MongoExpress**: Provides interface to access MongoDB through "localhost:8081", (user: "admin", pass: "pass").
 8. **Front**: The user interface where users can interact with the system.
 
 ## System Flow
@@ -43,6 +45,7 @@ The architecture includes the following services:
 ## Architecture Diagram
 
 ```mermaid
+%%{init: {'themeVariables': {'background': '#003366'}}}%%
 flowchart TD
     subgraph "Front Layer"
         A[Front]
@@ -53,46 +56,45 @@ flowchart TD
         C{RabbitMQ}
         E[News Manager]
     end
-    
+
     subgraph "Accessors Layer"
         D[Users DB Accessor]
         F[News API Accessor]
         G[Mail Accessor]
     end
-    
-    subgraph "Database Layer"
+
+    subgraph "External services Layer"
         I[MongoDB Service]
         H[External News API]
+        J[Mailtrap]
     end
 
     %% Style for entire chart background
-    classDef blue fill:#020b18,stroke:#003366;
-    classDef red fill:#5d0101,stroke:#003366;
+    classDef blue fill:#003366,stroke:#003366;
+    classDef red fill:#841213,stroke:#003366;
     classDef green fill:#15b617,stroke:#003366;
     classDef yellow fill:#b69615,stroke:#003366;
     class A red;
     class B,C,E blue;
     class D,F,G green;
-    class I,H yellow;
+    class I,H,J yellow;
 
     %% Connections
     A --> B
     B <--> D
     D <--> I
-
     B --> C
     C --> E
-
     E <--> F
     E <--> G
     F <--> H
-```
+    G --> J
 
+```
 
 ## Prerequisites
 
 Before running the project, ensure that the following tools are installed:
-
 
 [docker-desktop]: https://www.docker.com/products/docker-desktop/
 
@@ -117,11 +119,17 @@ To run the project, follow these steps:
 
 3. Once the containers are up and running, you can access the following services:
 
-  - Front: http://localhost:3000
-  - Mongo Express (for DB management): http://localhost:8081 (user: "admin" password: "pass").
-  - RabbitMQ (management console): http://localhost:15672
+- Front: http://localhost:3000
+- Mongo Express (for DB management): http://localhost:8081 (user: "admin" password: "pass").
+- RabbitMQ (management console): http://localhost:15672
 
 4. You can interact with the system via the Front end or directly through Postman (refer to the Postman collection section below).
+
+## Testing
+
+**Mailtrap**: This app is using Mailtrap service to demonstrate sending email to addresses.
+**Your cradentials** if you wish to see the updates, change the cradentials in the MailAccessor at MailAccessor/controllers/emailController according
+the instructions in lines 17-24.
 
 ## Postman Collection
 
@@ -138,9 +146,14 @@ Here are some potential improvements for the project:
 
 ## Conclusion
 
-This project demonstrates a modern microservices architecture that integrates various technologies like Docker, 
-Dapr, RabbitMQ, and MongoDB to build a scalable and flexible system. It provides personalized news updates to users based on their preferences, 
+This project demonstrates a modern microservices architecture that integrates various technologies like Docker,
+Dapr, RabbitMQ, and MongoDB to build a scalable and flexible system. It provides personalized news updates to users based on their preferences,
 delivering them via email. Future improvements and optimizations will make the system even more efficient and user-friendly.
 
+## Images
 
-
+<img src="images/Login Page.png" alt="login-page-image">
+<img src="images/Signup Page.png" alt="signup-page-image">
+<img src="images/Dashboard Page.png" alt="dashboard-page-image">
+<img src="images/Preference Page.png" alt="preference-page-image">
+<img src="images/Mail Example.png" alt="mail-page-image">

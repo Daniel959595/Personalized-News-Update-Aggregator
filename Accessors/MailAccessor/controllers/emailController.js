@@ -15,11 +15,11 @@ exports.sendNewsEmail = async (req, res) => {
     console.log(`Sending email to Address: ${emailAddress}`);
 
     var transporter = nodemailer.createTransport({
-      host: "sandbox.smtp.mailtrap.io",
+      host: "sandbox.smtp.mailtrap.io", // Replace with your SMTP host (e.g., smtp.gmail.com for Gmail)
       port: 2525,
       auth: {
-        user: emailUser,
-        pass: emailpass,
+        user: emailUser, // Replace with your Mailtrap/Gmail username
+        pass: emailpass, // Replace with your Mailtrap/Gmail password
       },
     });
 
