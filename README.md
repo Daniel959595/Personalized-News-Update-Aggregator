@@ -133,6 +133,8 @@ the instructions in lines 17-24.
 
 ## Postman Collection
 
+The collecttion was in use during the development proccess and might be broken, will be sent upon request. 
+
 ## Future Improvements
 
 Here are some potential improvements for the project:
