@@ -7,16 +7,21 @@ const emailpass = process.env.MAILTRAP_PASS;
 
 exports.sendNewsEmail = async (req, res) => {
   try {
-    console.log("MAILTRAP_USER:", emailUser);
-    console.log("MAILTRAP_PASS:", emailpass);
-
     const { emailAddress, articles } = req.body;
 
     console.log(`Sending email to Address: ${emailAddress}`);
 
     var transporter = nodemailer.createTransport({
+      // Uncomment this section if you're using Gmail
+      // service: "Gmail",
+      // host: "smtp.gmail.com",
+      // port: 465,
+      // secure: true,
+      //////////////////////////////////////
+      // Comment this section if you're Using Gmail
       host: "sandbox.smtp.mailtrap.io", // Replace with your SMTP host (e.g., smtp.gmail.com for Gmail)
       port: 2525,
+      /////////////////////////////////////
       auth: {
         user: emailUser, // Replace with your Mailtrap/Gmail username
         pass: emailpass, // Replace with your Mailtrap/Gmail password
