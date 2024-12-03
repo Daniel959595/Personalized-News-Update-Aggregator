@@ -80,7 +80,7 @@ flowchart TD
     class I,H,J yellow;
 
     %% Connections
-    A --> B
+    A <--> B
     B <--> D
     D <--> I
     B --> C
