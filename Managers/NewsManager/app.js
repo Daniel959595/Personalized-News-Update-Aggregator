@@ -1,7 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 
-const newsController = require("./Controllers/newsController.js");
+const newsController = require("./controllers/newsController.js");
 
 const app = express();
 app.use(bodyParser.json({ type: "application/*+json" }));
