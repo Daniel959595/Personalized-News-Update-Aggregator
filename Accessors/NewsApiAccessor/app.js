@@ -1,6 +1,6 @@
 const express = require("express");
 
-const newsApiController = require("./Controllers/NewaApiController.js");
+const newsApiController = require("./controllers/NewaApiController.js");
 const app = express();
 const PORT = 3003;
 
