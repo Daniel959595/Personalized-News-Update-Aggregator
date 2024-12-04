@@ -6,7 +6,7 @@ The system allows users to receive updates on various topics through email. The 
 ## Project Purpose
 
 The purpose of the system is to provide users with personalized news updates based on their interests.
-Users can register, log in, and request to receive news updates. The system aggregates news from multiple sources, processes it,
+Users can register, log in, and request to receive news updates. The system aggregates news from an external API (NewsData.io), processes it,
 sends updates to users via emails, and provides services for managing user data.
 
 ## Architecture
@@ -14,33 +14,35 @@ sends updates to users via emails, and provides services for managing user data.
 The system follows the **iDesign** methodology by Juval Löwy and includes the following components:
 
 - **Microservices**: Each service is responsible for a specific business domain.
-- **Dapr**: Each microservice runs with a **Dapr sidecar** providing communication between services and connecting to RabbitMQ.
+- **Dapr**: Each microservice (except for RabbitMQ) runs with a **Dapr sidecar** all communication between services is through Dapr.
 - **RabbitMQ**: Used for communication between two services - the **Users Manager** and **News Manager** via a **Declarative Subscription**.
 - **MongoDB**: The user data is stored in MongoDB, and access to it is managed through the **Users DB Accessor**.
 - **Mailtrap**: Used for sending emails to users (NodeMailer).
 
 The architecture includes the following services:
 
-1. **Users Manager**: Manages user registration, login, and preferences.
-2. **News Manager**: Aggregates news from external API and sends it to users via email.
-3. **News API Accessor**: Fetches news from the external NewsData.io API.
-4. **Mail Accessor**: Sends news updates to users via Mailtrap (NodeMailer).
-5. **Users DB Accessor**: Manages access to the MongoDB database for storing user information.
-6. **MongoDB**: Stores the users data.
-7. **MongoExpress**: Provides interface to access MongoDB through "localhost:8081", (user: "admin", pass: "pass").
-8. **Front**: The user interface where users can interact with the system.
+1. **Front**: The user interface where users can interact with the system.
+2. **Users Manager**: Manages user registration, login, and preferences.
+3. **News Manager**: Manages the news distribution, aggregates the news from an external API and sends it to the user.
+4. **News API Accessor**: Fetches news from the external NewsData.io API.
+5. **Mail Accessor**: Sends news updates to users.
+6. **Users DB Accessor**: Manages access to the MongoDB database for storing user information.
+7. **MongoDB**: Stores the users data.
+8. **MongoExpress**: Provides UI interface to access MongoDB.
+9. **RabbitMQ**: A message broker used by the Users Manager and the News Manager. 
 
 ## System Flow
 
-1. The **client (browser)** interacts with the **Front**, which communicates with the **Users Manager**.
+1. The **client (browser)** interacts with the **Front** service, which communicates with the **Users Manager**.
 2. The **Users Manager** authenticates the user by verifying credentials with the **Users DB Accessor**.
-3. All actions initiated by the client go through the **Users Manager**.
+3. All actions initiated by the client (Front) go through the **Users Manager**.
 4. For a news update request:
-   - The **Users Manager** publish a message to the RabbitMQ queue through dapr client with the required information.
-   - The **News Manager** receives the message via Declerative subscription in the `subscription.yaml` file.
-   - The **News Manager** requests the news from the **News API Accessor**.
+   - THe **Client** sends the request to the **Front**, which contact the **Users Manager**. 
+   - The **Users Manager** gets the user Data (preference etc.) from the **Users DB Accessor**, and publish a message to the **RabbitMQ** queue through dapr client with the required information.
+   - The **News Manager** receives the message via Declerative subscription (`subscription.yaml`) and requests the news from the **News API Accessor**.
    - The **News API Accessor** fetches the news from the external API (NewsData.io) and returns it to the **News Manager**.
-   - The **News Manager** sends the news to the **Mail Accessor**, which uses Mailtrap to deliver it to the client.
+   - The **News Manager** sends the news to the **Mail Accessor**.
+   - The **Mail Accessor** sends the news to the user.
 
 ## Architecture Diagram
 
@@ -129,7 +131,7 @@ To run the project, follow these steps:
 
 **Mailtrap**: This app is using Mailtrap service to demonstrate sending email to addresses.
 **Your cradentials** if you wish to see the updates, change the cradentials in the MailAccessor at MailAccessor/controllers/emailController according
-the instructions in lines 17-24.
+to the instructions in lines 17-24.
 
 ## Postman Collection
 
